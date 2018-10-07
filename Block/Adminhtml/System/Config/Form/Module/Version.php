@@ -1,10 +1,11 @@
 <?php
 /**
- * Copyright © 2016 MagePal. All rights reserved.
+ * Copyright © MagePal LLC. All rights reserved.
  * See COPYING.txt for license details.
- */
+ * http://www.magepal.com | support@magepal.com
+*/
 
-namespace MagePal\GmailSmtpApp\Block\Adminhtml\System\Config;
+namespace MagePal\GmailSmtpApp\Block\Adminhtml\System\Config\Form\Module;
 
 class Version extends \Magento\Config\Block\System\Config\Form\Field
 {
@@ -33,6 +34,7 @@ class Version extends \Magento\Config\Block\System\Config\Form\Field
      *
      * @param  \Magento\Framework\Data\Form\Element\AbstractElement $element
      * @return string
+     * @throws \Magento\Framework\Exception\LocalizedException
      */
     public function render(\Magento\Framework\Data\Form\Element\AbstractElement $element)
     {
@@ -40,7 +42,6 @@ class Version extends \Magento\Config\Block\System\Config\Form\Field
         $element->unsScope()->unsCanUseWebsiteValue()->unsCanUseDefaultValue();
         return parent::render($element);
     }
-
 
     /**
      * Return element html
@@ -54,13 +55,13 @@ class Version extends \Magento\Config\Block\System\Config\Form\Field
         return 'v' . $this->getVersion();
     }
 
-
     /**
      * Get Module version number
      *
      * @return string
      */
-    public function getVersion(){
+    public function getVersion()
+    {
         $moduleInfo = $this->_moduleList->getOne($this->getModuleName());
         return $moduleInfo['setup_version'];
     }

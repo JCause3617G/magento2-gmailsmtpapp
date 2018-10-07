@@ -1,7 +1,8 @@
 <?php
 /**
- * Copyright © 2016 MagePal. All rights reserved.
+ * Copyright © MagePal LLC. All rights reserved.
  * See COPYING.txt for license details.
+ * http://www.magepal.com | support@magepal.com
  */
 
 namespace MagePal\GmailSmtpApp\Block\Adminhtml\System\Config;
@@ -14,7 +15,7 @@ class TestButton extends \Magento\Config\Block\System\Config\Form\Field
 {
     /** @var UrlInterface */
     protected $_urlBuilder;
-    
+
     /**
      * @param \Magento\Backend\Block\Template\Context $context
      * @param array $data
@@ -42,6 +43,7 @@ class TestButton extends \Magento\Config\Block\System\Config\Form\Field
      * Generate button html
      *
      * @return string
+     * @throws \Magento\Framework\Exception\LocalizedException
      */
     public function getButtonHtml()
     {
@@ -57,9 +59,10 @@ class TestButton extends \Magento\Config\Block\System\Config\Form\Field
 
         return $button->toHtml();
     }
-    
-    public function getAdminUrl(){
-        return $this->_urlBuilder->getUrl('magepalGmailsmtpapp/test', ['store' => $this->_request->getParam('store')]);
+
+    public function getAdminUrl()
+    {
+        return $this->_urlBuilder->getUrl('magepalsmtp/test', ['store' => $this->_request->getParam('store')]);
     }
 
     /**
@@ -67,6 +70,7 @@ class TestButton extends \Magento\Config\Block\System\Config\Form\Field
      *
      * @param  \Magento\Framework\Data\Form\Element\AbstractElement $element
      * @return string
+     * @throws \Magento\Framework\Exception\LocalizedException
      */
     public function render(\Magento\Framework\Data\Form\Element\AbstractElement $element)
     {

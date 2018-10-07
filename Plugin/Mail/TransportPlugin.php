@@ -1,35 +1,53 @@
 <?php
 /**
- * Mail Transport
- * Copyright © 2015-2017 MagePal. All rights reserved.
+ * Copyright © MagePal LLC. All rights reserved.
  * See COPYING.txt for license details.
+ * http://www.magepal.com | support@magepal.com
  */
+
 namespace MagePal\GmailSmtpApp\Plugin\Mail;
 
 class TransportPlugin extends \Zend_Mail_Transport_Smtp
 {
-    /** @var \MagePal\GmailSmtpApp\Helper\Data */
+    /**
+     * @var \MagePal\GmailSmtpApp\Helper\Data
+     */
     protected $dataHelper;
-    
+
+    /**
+     * @var \MagePal\GmailSmtpApp\Model\Store
+     */
+    protected $storeModel;
+
     /**
      * @param \MagePal\GmailSmtpApp\Helper\Data $dataHelper
      */
-    public function __construct(\MagePal\GmailSmtpApp\Helper\Data $dataHelper)
-    {
+    public function __construct(
+        \MagePal\GmailSmtpApp\Helper\Data $dataHelper,
+        \MagePal\GmailSmtpApp\Model\Store $storeModel
+    ) {
         $this->dataHelper = $dataHelper;
+        $this->storeModel = $storeModel;
     }
 
     /**
      * @param \Magento\Framework\Mail\TransportInterface $subject
      * @param \Closure $proceed
+     * @throws \Magento\Framework\Exception\MailException
+     * @throws \Zend_Mail_Exception
      */
-    public function aroundSendMessage(\Magento\Framework\Mail\TransportInterface $subject, \Closure $proceed){
+    public function aroundSendMessage(
+        \Magento\Framework\Mail\TransportInterface $subject,
+        \Closure $proceed
+    ) {
+        if ($this->dataHelper->isActive()) {
+            if (method_exists($subject, 'getStoreId')) {
+                $this->storeModel->setStoreId($subject->getStoreId());
+            }
 
-        if($this->dataHelper->isActive()){
             $message = $subject->getMessage();
             $this->sendSmtpMessage($message);
-        }
-        else{
+        } else {
             $proceed();
         }
     }
@@ -37,9 +55,18 @@ class TransportPlugin extends \Zend_Mail_Transport_Smtp
     /**
      * @param \Magento\Framework\Mail\MessageInterface $message
      * @throws \Magento\Framework\Exception\MailException
+     * @throws \Zend_Mail_Exception
      */
-    public function sendSmtpMessage(\Magento\Framework\Mail\MessageInterface $message){
+    public function sendSmtpMessage(\Magento\Framework\Mail\MessageInterface $message)
+    {
         $dataHelper = $this->dataHelper;
+        $dataHelper->setStoreId($this->storeModel->getStoreId());
+
+        if ($message instanceof \Zend_mail) {
+            if ($message->getDate() === null) {
+                $message->setDate();
+            }
+        }
 
         //Set reply-to path
         $setReturnPath = $dataHelper->getConfigSetReturnPath();
@@ -59,7 +86,7 @@ class TransportPlugin extends \Zend_Mail_Transport_Smtp
             $message->setReturnPath($returnPathEmail);
         }
 
-        if ($message->getReplyTo() === NULL && $dataHelper->getConfigSetReplyTo()) {
+        if ($message->getReplyTo() === null && $dataHelper->getConfigSetReplyTo()) {
             $message->setReplyTo($returnPathEmail);
         }
 
@@ -99,7 +126,7 @@ class TransportPlugin extends \Zend_Mail_Transport_Smtp
      * @param string $host
      * @param array $config
      */
-    public function initialize($host = '127.0.0.1', Array $config = array())
+    public function initialize($host = '127.0.0.1', array $config = [])
     {
         if (isset($config['name'])) {
             $this->_name = $config['name'];

@@ -1,8 +1,9 @@
 <?xml version="1.0"?>
 <!--
 /**
- * Copyright © 2015-2017 MagePal. All rights reserved.
+ * Copyright © MagePal LLC. All rights reserved.
  * See COPYING.txt for license details.
+ * http://www.magepal.com | support@magepal.com
  */
 -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
@@ -18,6 +19,8 @@
                 <set_return_path>1</set_return_path>
                 <set_reply_to>1</set_reply_to>
                 <password backend_model="Magento\Config\Model\Config\Backend\Encrypted" />
+                <zend_email_template>magepal_smtp_zend_email_test</zend_email_template>
+                <magento_email_template>magepal_smtp_magento_email_test</magento_email_template>
             </gmailsmtpapp>
         </system>
     </default>

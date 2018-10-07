@@ -1,13 +1,14 @@
 <?xml version="1.0"?>
 <!--
 /**
- * Copyright © 2015 Magento. All rights reserved.
+ * Copyright © MagePal LLC. All rights reserved.
  * See COPYING.txt for license details.
+ * http://www.magepal.com | support@magepal.com
  */
 -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:App/etc/routes.xsd">
     <router id="admin">
-        <route id="magepalGmailsmtpapp" frontName="magepalGmailsmtpapp">
+        <route id="magepalSmtp" frontName="magepalsmtp">
             <module name="MagePal_GmailSmtpApp" before="Magento_Backend" />
         </route>
     </router>
